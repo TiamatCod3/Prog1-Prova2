@@ -13,35 +13,61 @@ def contarArquivo(arq):
                 contarPalavras[palavra] += 1
             else:
                 contarPalavras[palavra] = 1
-    print(contarPalavras)
-    print(type(contarPalavras))
+    
     dados.close
-    return contarPalavras
-def verificaFrequentes(vals):
+    dados = None
+    dados = open(arq+"contado","w", encoding="utf-8")
+    for item in contarPalavras:
+        dados.write(f"{item} {contarPalavras[item]}\n")
+        
+    dados.close()
+    dados= None
+    return None
+def verificaFrequentes(arq):
+    dados = open(arq, "r", encoding="utf-8")
     frequentes = [0,[]]
-    for palavra in vals:
-        if vals[palavra]>frequentes[0]:
-            frequentes[0]= vals[palavra]
-            frequentes[1]=[palavra]
-        elif vals[palavra]==frequentes[0]:
+    for linha in dados:
+        palavra = linha.strip("\n").split()[0]
+        contagem = int(linha.strip("\n").split()[1])
+        if contagem>frequentes[0]:
+            frequentes[0]= contagem
+            frequentes[1]= [palavra]
+        elif contagem==frequentes[0]:
             frequentes[1].append(palavra)
-    print(frequentes)
-    return frequentes
-def imprimePalavras(vals):
+    
+    dados.close()
+    dados = None
+    dados = open(arq, "w", encoding="utf-8")
+    dados.write(str(frequentes[0])+"\n")
+    for palavra in frequentes[1]:
+        dados.write(palavra+"\n")
+    dados.close()
+    return None
+
+def imprimeFrequentes(arq):
+    dados = open(arq, "r", encoding="utf-8")
+    casos = int(dados.readline().strip("\n"))
     texto = "A(s) palavra(s)"
-    for palavras in vals[1]:
-        texto += f" '{palavras}'"
-    texto += f" ocorre(m) {vals[0]} vez(es)"
+    for linha in dados:
+        linha = linha.strip("\n")
+        texto += f" '{linha}'"
+        
+    texto += f" aparece(m) {casos} vez(es)"
+    
     print(texto)
     return None
+
 #Programa Principal
 import os
 nomeArq = input("Digite o nome do arquivo: ")
 if os.stat(nomeArq).st_size == 0:
     print("VAZIO – Nenhuma!!!")
 else:
-    frequenciaPalavras = contarArquivo(nomeArq)
-    palavrasFrequentes = verificaFrequentes(frequenciaPalavras)
-    palavrasFrequentes[1].sort()
-    imprimePalavras(palavrasFrequentes)
+    contarArquivo(nomeArq)
+    verificaFrequentes(nomeArq+"contado")
+    imprimeFrequentes(nomeArq+"contado")
+  
+    #palavrasFrequentes = verificaFrequentes(frequenciaPalavras)
+    #palavrasFrequentes[1].sort()
+    #imprimePalavras(palavrasFrequentes)
 
